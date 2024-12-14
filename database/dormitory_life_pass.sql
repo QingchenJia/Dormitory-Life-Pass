@@ -185,6 +185,7 @@ CREATE TABLE `room_repair`  (
   `id` bigint NOT NULL COMMENT '唯一标识符',
   `room_id` bigint NOT NULL COMMENT '寝室唯一标识符',
   `student_id` bigint NOT NULL COMMENT '申请的学生唯一标识符',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '损毁情况',
   `employee_dm_id` bigint NOT NULL COMMENT '宿舍管理员的唯一标识符',
   `employee_mw_id` bigint NOT NULL COMMENT '安排的维修工的唯一标识符',
   `status` tinyint NOT NULL COMMENT '状态（1：已申请，2：已安排，3：已完成）',
