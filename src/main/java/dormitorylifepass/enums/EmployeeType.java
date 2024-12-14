@@ -1,6 +1,8 @@
 package dormitorylifepass.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter
@@ -11,10 +13,21 @@ public enum EmployeeType {
 
     @EnumValue
     private final Integer code;
-    private final String name;
+    @JsonValue
+    private final String desc;
 
-    EmployeeType(Integer code, String name) {
+    EmployeeType(Integer code, String desc) {
         this.code = code;
-        this.name = name;
+        this.desc = desc;
+    }
+
+    @JsonCreator
+    public static EmployeeType toEnum(Integer code) {
+        for (EmployeeType employeeType : EmployeeType.values()) {
+            if (employeeType.getCode().equals(code)) {
+                return employeeType;
+            }
+        }
+        return null;
     }
 }

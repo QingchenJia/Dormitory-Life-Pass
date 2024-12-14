@@ -1,6 +1,8 @@
 package dormitorylifepass.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter
@@ -13,10 +15,21 @@ public enum RoomChangeStatus {
 
     @EnumValue
     private final Integer code;
-    private final String name;
+    @JsonValue
+    private final String desc;
 
-    RoomChangeStatus(Integer code, String name) {
+    RoomChangeStatus(Integer code, String desc) {
         this.code = code;
-        this.name = name;
+        this.desc = desc;
+    }
+
+    @JsonCreator
+    public static RoomChangeStatus toEnum(Integer code) {
+        for (RoomChangeStatus roomChangeStatus : RoomChangeStatus.values()) {
+            if (roomChangeStatus.getCode().equals(code)) {
+                return roomChangeStatus;
+            }
+        }
+        return null;
     }
 }

@@ -1,6 +1,8 @@
 package dormitorylifepass.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter
@@ -10,10 +12,21 @@ public enum LostFoundStatus {
 
     @EnumValue
     private final Integer code;
-    private final String name;
+    @JsonValue
+    private final String desc;
 
-    LostFoundStatus(Integer code, String name) {
+    LostFoundStatus(Integer code, String desc) {
         this.code = code;
-        this.name = name;
+        this.desc = desc;
+    }
+
+    @JsonCreator
+    public static LostFoundStatus toEnum(Integer code) {
+        for (LostFoundStatus lostFoundStatus : LostFoundStatus.values()) {
+            if (lostFoundStatus.getCode().equals(code)) {
+                return lostFoundStatus;
+            }
+        }
+        return null;
     }
 }
