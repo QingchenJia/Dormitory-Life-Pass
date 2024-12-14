@@ -194,6 +194,7 @@ CREATE TABLE `building`  (
 |   old_room_id   |  BigInt  |      |                  当前寝室唯一标识符                   |    N     | 外键（寝室） |
 |   new_room_id   |  BigInt  |      |                  目标寝室唯一标识符                   |    N     | 外键（寝室） |
 |   student_id    |  BigInt  |      |               提出申请的学生唯一标识符                |    N     | 外键（学生） |
+|     reason      | varchar  | 255  |                       申请原因                        |    Y     |              |
 | old_employee_id |  BigInt  |      |            处理事项的宿舍管理员唯一标识符             |    N     | 外键（员工） |
 | new_employee_id |  BigInt  |      |            目标寝室的宿舍管理员唯一标识符             |    N     | 外键（员工） |
 |     status      | TinyInt  |      | 状态（1：已申请，2：批准，3：驳回，4：接受，5：拒绝） |    N     |              |
@@ -209,6 +210,7 @@ CREATE TABLE `room_change`  (
   `old_room_id` bigint NOT NULL COMMENT '当前寝室唯一标识符',
   `new_room_id` bigint NOT NULL COMMENT '目标寝室唯一标识符',
   `student_id` bigint NOT NULL COMMENT '提出申请的学生唯一标识符',
+  `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '申请原因',
   `old_employee_id` bigint NOT NULL COMMENT '处理事项的宿舍管理员唯一标识符',
   `new_employee_id` bigint NOT NULL COMMENT '目标寝室的宿舍管理员唯一标识符',
   `status` tinyint NOT NULL COMMENT '状态（1：已申请，2：批准，3：驳回，4：接受，5：拒绝）',
