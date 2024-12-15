@@ -38,21 +38,21 @@
 
 #### 1.学生表(student)
 
-|   字段名    |   类型   | 长度 |         描述         | 可否为空 |      索引      |
-| :---------: | :------: | :--: | :------------------: | :------: | :------------: |
-|     id      |  BigInt  |      |      唯一标识符      |    N     |      主键      |
-| student_num |   char   |  12  |         学号         |    N     |    唯一索引    |
-|    name     | varchar  |  20  |         姓名         |    N     |                |
-|  username   | varchar  |  10  | 用户名（默认为学号） |    N     |    唯一索引    |
-|  password   | varchar  |  32  |         密码         |    N     |                |
-|   gender    | TinyInt  |      | 性别（1：男，0：女） |    N     |                |
-|    phone    |   char   |  11  |       电话号码       |    N     |                |
-|   room_id   |  BigInt  |      |    寝室唯一标识符    |    Y     | 外键（寝室表） |
-| create_time | datetime |      |       创建时间       |    Y     |                |
-| update_time | datetime |      |       更新时间       |    Y     |                |
-| create_user |  BigInt  |      |       创建用户       |    Y     |                |
-| update_user |  BigInt  |      |       更新用户       |    Y     |                |
-| is_deleted  | TinyInt  |      |    逻辑删除标志位    |    N     |                |
+|   字段名    |   类型   | 长度  |         描述         | 可否为空 |      索引      |
+| :---------: | :------: |:---:| :------------------: | :------: | :------------: |
+|     id      |  BigInt  |     |      唯一标识符      |    N     |      主键      |
+| student_num |   char   | 12  |         学号         |    N     |    唯一索引    |
+|    name     | varchar  | 20  |         姓名         |    N     |                |
+|  username   | varchar  | 10  | 用户名（默认为学号） |    N     |    唯一索引    |
+|  password   | varchar  | 255 |         密码         |    N     |                |
+|   gender    | TinyInt  |     | 性别（1：男，0：女） |    N     |                |
+|    phone    |   char   | 11  |       电话号码       |    N     |                |
+|   room_id   |  BigInt  |     |    寝室唯一标识符    |    Y     | 外键（寝室表） |
+| create_time | datetime |     |       创建时间       |    Y     |                |
+| update_time | datetime |     |       更新时间       |    Y     |                |
+| create_user |  BigInt  |     |       创建用户       |    Y     |                |
+| update_user |  BigInt  |     |       更新用户       |    Y     |                |
+| is_deleted  | TinyInt  |     |    逻辑删除标志位    |    N     |                |
 
 ```sql
 CREATE TABLE `student`  (
@@ -60,7 +60,7 @@ CREATE TABLE `student`  (
   `student_num` char(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '学号',
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '姓名',
   `username` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名（默认为学号）',
-  `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `gender` tinyint NOT NULL COMMENT '性别（1：男，0：女）',
   `phone` char(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '电话号码',
   `room_id` bigint NULL DEFAULT NULL COMMENT '寝室唯一标识符',
@@ -79,21 +79,21 @@ CREATE TABLE `student`  (
 
 #### 2.员工表(employee)
 
-|   字段名    |   类型   | 长度 |                      描述                       | 可否为空 |   索引   |
-| :---------: | :------: | :--: | :---------------------------------------------: | :------: | :------: |
-|     id      |  BigInt  |      |                   唯一标识符                    |    N     |   主键   |
-|   job_num   | varchar  |  8   |                      工号                       |    N     | 唯一索引 |
-|    name     | varchar  |  20  |                      姓名                       |    N     |          |
-|  username   | varchar  |  10  |                     用户名                      |    N     | 唯一索引 |
-|  passowrd   | varchar  |  32  |                      密码                       |    N     |          |
-|   gender    | TinyInt  |      |              性别（1：男，0：女）               |    N     |          |
-|    phone    |   char   |  11  |                    电话号码                     |    N     |          |
-|    type     | TinyInt  |      | 身份（1：宿舍管理员，2：维修工，0：超级管理员） |    N     |          |
-| create_time | datetime |      |                    创建时间                     |    Y     |          |
-| update_time | datetime |      |                    更新时间                     |    Y     |          |
-| create_user |  BigInt  |      |                    创建用户                     |    Y     |          |
-| update_user |  BigInt  |      |                    更新用户                     |    Y     |          |
-| is_deleted  | TinyInt  |      |                 逻辑删除标志位                  |    N     |          |
+|   字段名    |   类型   | 长度  |                      描述                       | 可否为空 |   索引   |
+| :---------: | :------: |:---:| :---------------------------------------------: | :------: | :------: |
+|     id      |  BigInt  |     |                   唯一标识符                    |    N     |   主键   |
+|   job_num   | varchar  |  8  |                      工号                       |    N     | 唯一索引 |
+|    name     | varchar  | 20  |                      姓名                       |    N     |          |
+|  username   | varchar  | 10  |                     用户名                      |    N     | 唯一索引 |
+|  passowrd   | varchar  | 255 |                      密码                       |    N     |          |
+|   gender    | TinyInt  |     |              性别（1：男，0：女）               |    N     |          |
+|    phone    |   char   | 11  |                    电话号码                     |    N     |          |
+|    type     | TinyInt  |     | 身份（1：宿舍管理员，2：维修工，0：超级管理员） |    N     |          |
+| create_time | datetime |     |                    创建时间                     |    Y     |          |
+| update_time | datetime |     |                    更新时间                     |    Y     |          |
+| create_user |  BigInt  |     |                    创建用户                     |    Y     |          |
+| update_user |  BigInt  |     |                    更新用户                     |    Y     |          |
+| is_deleted  | TinyInt  |     |                 逻辑删除标志位                  |    N     |          |
 
 ```sql
 CREATE TABLE `employee`  (
@@ -101,7 +101,7 @@ CREATE TABLE `employee`  (
   `job_num` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '工号',
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '姓名',
   `username` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
-  `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `gender` tinyint NOT NULL COMMENT '性别（1：男，0：女）',
   `phone` char(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '电话号码',
   `type` tinyint NOT NULL COMMENT '身份（1：宿舍管理员，2：维修工，0：超级管理员）',
