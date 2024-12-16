@@ -82,9 +82,9 @@ public class EmployeeController {
      * 根据页面号和页面大小以及员工姓名查询员工信息
      * 此方法使用GET请求处理分页查询，允许根据员工姓名进行模糊搜索
      *
-     * @param page 页面号，表示请求的页面编号
+     * @param page     页面号，表示请求的页面编号
      * @param pageSize 页面大小，表示每页显示的记录数
-     * @param name 员工姓名，用于模糊匹配查询
+     * @param name     员工姓名，用于模糊匹配查询
      * @return 返回一个封装了员工信息页面对象的响应结果
      */
     @GetMapping("/page")
@@ -97,5 +97,34 @@ public class EmployeeController {
 
         // 返回封装了查询结果的响应对象
         return R.success(pageInfo);
+    }
+
+    /**
+     * 根据员工ID查询员工信息
+     *
+     * @param id 员工ID，通过URL路径变量传递
+     * @return 返回一个封装了员工信息的响应对象
+     */
+    @GetMapping("/{id}")
+    public R<Employee> queryOne(@PathVariable Long id) {
+        // 根据ID从数据库中获取员工信息
+        Employee employeeDB = employeeService.getById(id);
+        // 返回成功响应，包含查询到的员工信息
+        return R.success(employeeDB);
+    }
+
+    /**
+     * 更新员工信息的接口方法
+     * 该方法通过HTTP PUT请求接收员工数据，并调用服务层方法更新数据库中的员工信息
+     *
+     * @param employee 员工对象，包含要更新的员工信息，通过请求体传递
+     * @return 返回一个表示操作结果的响应对象，包含操作是否成功和提示信息
+     */
+    @PutMapping
+    public R<String> update(@RequestBody Employee employee) {
+        // 调用服务层方法，根据员工对象中的信息更新数据库
+        employeeService.updateById(employee);
+        // 返回成功响应，表示员工信息修改成功
+        return R.success("员工信息修改成功");
     }
 }
