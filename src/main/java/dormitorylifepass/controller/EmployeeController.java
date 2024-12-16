@@ -1,15 +1,13 @@
 package dormitorylifepass.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import dormitorylifepass.common.R;
 import dormitorylifepass.entity.Employee;
 import dormitorylifepass.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employee")
@@ -78,5 +76,26 @@ public class EmployeeController {
         employeeService.insert(employee);
         // 返回新增员工成功的响应
         return R.success("新增员工成功");
+    }
+
+    /**
+     * 根据页面号和页面大小以及员工姓名查询员工信息
+     * 此方法使用GET请求处理分页查询，允许根据员工姓名进行模糊搜索
+     *
+     * @param page 页面号，表示请求的页面编号
+     * @param pageSize 页面大小，表示每页显示的记录数
+     * @param name 员工姓名，用于模糊匹配查询
+     * @return 返回一个封装了员工信息页面对象的响应结果
+     */
+    @GetMapping("/page")
+    public R<Page<Employee>> page(int page, int pageSize, String name) {
+        // 创建Page对象，用于封装分页查询的参数
+        Page<Employee> pageInfo = new Page<>(page, pageSize);
+
+        // 调用服务层方法执行分页查询
+        employeeService.selectPage(pageInfo, name);
+
+        // 返回封装了查询结果的响应对象
+        return R.success(pageInfo);
     }
 }

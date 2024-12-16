@@ -2,6 +2,7 @@ package dormitorylifepass.service.impl;
 
 import ch.qos.logback.core.util.StringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dormitorylifepass.common.CustomException;
 import dormitorylifepass.entity.Employee;
@@ -57,5 +58,24 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         employee.setPassword(SHA256Util.encrypt("123456"));
         // 保存员工实体到数据库
         save(employee);
+    }
+
+    /**
+     * 根据员工姓名查询并分页获取员工信息
+     *
+     * @param page 分页对象，包含分页参数和查询结果
+     * @param name 员工姓名，用于筛选查询结果
+     */
+    @Override
+    public void selectPage(Page<Employee> page, String name) {
+        // 创建Lambda查询包装器，用于构造查询条件和排序
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 当姓名不为空也不为空字符串时，添加查询条件：按姓名模糊匹配，并按更新时间降序排序
+        queryWrapper.like(StringUtil.notNullNorEmpty(name), Employee::getName, name)
+                .orderByDesc(Employee::getUpdateTime);
+
+        // 执行分页查询
+        page(page, queryWrapper);
     }
 }
