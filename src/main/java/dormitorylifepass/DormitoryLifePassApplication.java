@@ -15,8 +15,7 @@ public class DormitoryLifePassApplication {
                 -------------------------------------------------------
                 \tApplication:\tDormitoryLifePass Starting...
                 \tApi-doc:\thttp://localhost:8080/doc.html
-                -------------------------------------------------------
-                """);
+                -------------------------------------------------------""");
     }
 
 }

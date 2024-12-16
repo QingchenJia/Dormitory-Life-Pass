@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.ToString;
 
 @Data
-@ToString(callSuper = true)
 public class CheckInDetail extends BaseEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long checkInId;
