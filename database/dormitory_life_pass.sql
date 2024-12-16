@@ -22,8 +22,8 @@ DROP TABLE IF EXISTS `building`;
 CREATE TABLE `building`  (
   `id` bigint NOT NULL COMMENT '唯一标识符',
   `location` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '位置',
-  `number` tinyint NOT NULL COMMENT '序号',
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '名称',
+  `type` tinyint NOT NULL COMMENT '类型（1：男宿舍楼，0：女宿舍楼）',
   `employee_id` bigint NULL DEFAULT NULL COMMENT '安排宿舍管理员唯一标识符',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
@@ -31,6 +31,7 @@ CREATE TABLE `building`  (
   `update_user` bigint NULL DEFAULT NULL COMMENT '更新用户',
   `is_deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除标志位',
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `name`(`name` ASC) USING BTREE,
   INDEX `building_fk_employee`(`employee_id` ASC) USING BTREE,
   CONSTRAINT `building_fk_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '宿舍楼表' ROW_FORMAT = Dynamic;

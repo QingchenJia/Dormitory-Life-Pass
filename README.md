@@ -155,25 +155,25 @@ CREATE TABLE `room`  (
 
 #### 4.宿舍楼(building)
 
-|   字段名    |   类型   | 长度 |           描述           | 可否为空 |     索引     |
-| :---------: | :------: | :--: | :----------------------: | :------: | :----------: |
-|     id      |  BigInt  |      |        唯一标识符        |    N     |     主键     |
-|  location   | varchar  |  64  |           位置           |    N     |              |
-|   number    | TinyInt  |      |           序号           |    N     |              |
-|    name     | varchar  |  20  |           名称           |    Y     |              |
-| employee_id |  BigInt  |      | 安排宿舍管理员唯一标识符 |    Y     | 外键（员工） |
-| create_time | datetime |      |         创建时间         |    Y     |              |
-| update_time | datetime |      |         更新时间         |    Y     |              |
-| create_user |  BigInt  |      |         创建用户         |    Y     |              |
-| update_user |  BigInt  |      |         更新用户         |    Y     |              |
-| is_deleted  | TinyInt  |      |      逻辑删除标志位      |    N     |              |
+|   字段名    |   类型   | 长度 |               描述               | 可否为空 |     索引     |
+| :---------: | :------: | :--: | :------------------------------: | :------: | :----------: |
+|     id      |  BigInt  |      |            唯一标识符            |    N     |     主键     |
+|  location   | varchar  |  64  |               位置               |    N     |              |
+|    name     | varchar  |  20  |               名称               |    Y     |   唯一索引   |
+|    type     | tinyint  |      | 类型（1：男宿舍楼，0：女宿舍楼） |    N     |              |
+| employee_id |  BigInt  |      |     安排宿舍管理员唯一标识符     |    Y     | 外键（员工） |
+| create_time | datetime |      |             创建时间             |    Y     |              |
+| update_time | datetime |      |             更新时间             |    Y     |              |
+| create_user |  BigInt  |      |             创建用户             |    Y     |              |
+| update_user |  BigInt  |      |             更新用户             |    Y     |              |
+| is_deleted  | TinyInt  |      |          逻辑删除标志位          |    N     |              |
 
 ```sql
 CREATE TABLE `building`  (
   `id` bigint NOT NULL COMMENT '唯一标识符',
   `location` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '位置',
-  `number` tinyint NOT NULL COMMENT '序号',
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '名称',
+  `type` tinyint NOT NULL COMMENT '类型（1：男宿舍楼，0：女宿舍楼）',
   `employee_id` bigint NULL DEFAULT NULL COMMENT '安排宿舍管理员唯一标识符',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
@@ -182,6 +182,7 @@ CREATE TABLE `building`  (
   `is_deleted` tinyint NOT NULL COMMENT '逻辑删除标志位',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `building_fk_employee`(`employee_id` ASC) USING BTREE,
+  UNIQUE INDEX `name`(`name` ASC) USING BTREE,
   CONSTRAINT `building_fk_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '宿舍楼表' ROW_FORMAT = Dynamic;
 ```

@@ -25,7 +25,7 @@ public class BuildingServiceImpl extends ServiceImpl<BuildingMapper, Building> i
         // 如果名称关键词不为空也不为空字符串，则添加模糊查询条件
         queryWrapper.like(StringUtil.notNullNorEmpty(name), Building::getName, name)
                 // 添加按建筑物编号升序排序的条件
-                .orderByAsc(Building::getNumber);
+                .orderByAsc(Building::getName);
 
         // 执行分页查询
         page(page, queryWrapper);
