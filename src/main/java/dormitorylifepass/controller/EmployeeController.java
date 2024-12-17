@@ -3,11 +3,15 @@ package dormitorylifepass.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import dormitorylifepass.common.R;
 import dormitorylifepass.entity.Employee;
+import dormitorylifepass.enums.EmployeeStatus;
+import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
@@ -126,5 +130,22 @@ public class EmployeeController {
         employeeService.updateById(employee);
         // 返回成功响应，表示员工信息修改成功
         return R.success("员工信息修改成功");
+    }
+
+    /**
+     * 根据员工类型和状态获取员工列表
+     * 此方法使用GET请求处理，从请求参数中获取员工类型和状态，
+     * 并调用服务层方法查询符合条件的员工列表，最后将查询结果封装到响应对象中返回
+     *
+     * @param employeeType   员工类型，用于筛选查询结果
+     * @param employeeStatus 员工状态，用于筛选查询结果
+     * @return 返回一个封装了查询结果的响应对象
+     */
+    @GetMapping("/list")
+    public R<List<Employee>> list(@RequestParam("type") Integer employeeType, @RequestParam("status") Integer employeeStatus) {
+        // 调用服务层方法，根据员工类型和状态查询员工列表
+        List<Employee> employeesDB = employeeService.selectList(EmployeeType.toEnum(employeeType), EmployeeStatus.toEnum(employeeStatus));
+        // 将查询结果封装到响应对象中并返回
+        return R.success(employeesDB);
     }
 }

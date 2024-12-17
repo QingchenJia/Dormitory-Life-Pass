@@ -6,10 +6,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dormitorylifepass.common.CustomException;
 import dormitorylifepass.entity.Employee;
+import dormitorylifepass.enums.EmployeeStatus;
+import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.mapper.EmployeeMapper;
 import dormitorylifepass.service.EmployeeService;
 import dormitorylifepass.utils.SHA256Util;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
@@ -77,5 +81,24 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         // 执行分页查询
         page(page, queryWrapper);
+    }
+
+    /**
+     * 根据员工类型选择未安排工作的员工
+     *
+     * @param employeeType 员工类型，用于筛选特定类型的员工
+     * @return 返回一个员工列表，这些员工的类型匹配给定的员工类型，并且他们的状态为未安排工作
+     */
+    @Override
+    public List<Employee> selectList(EmployeeType employeeType, EmployeeStatus employeeStatus) {
+        // 创建一个Lambda查询包装器，用于构建查询条件
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 设置查询条件：根据员工类型和状态（未安排工作）进行查询
+        queryWrapper.eq(Employee::getType, employeeType)
+                .eq(Employee::getStatus, employeeStatus);
+
+        // 执行查询并返回结果列表
+        return list(queryWrapper);
     }
 }

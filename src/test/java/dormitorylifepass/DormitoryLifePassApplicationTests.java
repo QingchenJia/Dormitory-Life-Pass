@@ -1,6 +1,7 @@
 package dormitorylifepass;
 
 import dormitorylifepass.entity.Employee;
+import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.EmployeeService;
 import dormitorylifepass.utils.SHA256Util;
 import org.junit.jupiter.api.Test;
@@ -29,5 +30,11 @@ class DormitoryLifePassApplicationTests {
         String encrypt = SHA256Util.encrypt("123456");
         System.out.println(encrypt.length());
         System.out.println(encrypt);
+    }
+
+    @Test
+    void testSelectEmployeeByType() {
+        List<Employee> employees = employeeService.selectByType(EmployeeType.DORMITORY_MANAGER);
+        employees.forEach(System.out::println);
     }
 }
