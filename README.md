@@ -38,21 +38,21 @@
 
 #### 1.学生表(student)
 
-|   字段名    |   类型   | 长度  |         描述         | 可否为空 |      索引      |
-| :---------: | :------: |:---:| :------------------: | :------: | :------------: |
-|     id      |  BigInt  |     |      唯一标识符      |    N     |      主键      |
-| student_num |   char   | 12  |         学号         |    N     |    唯一索引    |
-|    name     | varchar  | 20  |         姓名         |    N     |                |
-|  username   | varchar  | 10  | 用户名（默认为学号） |    N     |    唯一索引    |
-|  password   | varchar  | 255 |         密码         |    N     |                |
-|   gender    | TinyInt  |     | 性别（1：男，0：女） |    N     |                |
-|    phone    |   char   | 11  |       电话号码       |    N     |                |
-|   room_id   |  BigInt  |     |    寝室唯一标识符    |    Y     | 外键（寝室表） |
-| create_time | datetime |     |       创建时间       |    Y     |                |
-| update_time | datetime |     |       更新时间       |    Y     |                |
-| create_user |  BigInt  |     |       创建用户       |    Y     |                |
-| update_user |  BigInt  |     |       更新用户       |    Y     |                |
-| is_deleted  | TinyInt  |     |    逻辑删除标志位    |    N     |                |
+|   字段名    |   类型   | 长度 |         描述         | 可否为空 |      索引      |
+| :---------: | :------: | :--: | :------------------: | :------: | :------------: |
+|     id      |  BigInt  |      |      唯一标识符      |    N     |      主键      |
+| student_num |   char   |  12  |         学号         |    N     |    唯一索引    |
+|    name     | varchar  |  20  |         姓名         |    N     |                |
+|  username   | varchar  |  20  | 用户名（默认为学号） |    N     |    唯一索引    |
+|  password   | varchar  | 255  |         密码         |    N     |                |
+|   gender    | TinyInt  |      | 性别（1：男，0：女） |    N     |                |
+|    phone    |   char   |  11  |       电话号码       |    N     |                |
+|   room_id   |  BigInt  |      |    寝室唯一标识符    |    Y     | 外键（寝室表） |
+| create_time | datetime |      |       创建时间       |    Y     |                |
+| update_time | datetime |      |       更新时间       |    Y     |                |
+| create_user |  BigInt  |      |       创建用户       |    Y     |                |
+| update_user |  BigInt  |      |       更新用户       |    Y     |                |
+| is_deleted  | TinyInt  |      |    逻辑删除标志位    |    N     |                |
 
 #### 2.员工表(employee)
 
@@ -61,7 +61,7 @@
 |     id      |  BigInt  |      |                   唯一标识符                    |    N     |   主键   |
 |   job_num   | varchar  |  8   |                      工号                       |    N     | 唯一索引 |
 |    name     | varchar  |  20  |                      姓名                       |    N     |          |
-|  username   | varchar  |  10  |                     用户名                      |    N     | 唯一索引 |
+|  username   | varchar  |  20  |                     用户名                      |    N     | 唯一索引 |
 |  passowrd   | varchar  | 255  |                      密码                       |    N     |          |
 |   gender    | TinyInt  |      |              性别（1：男，0：女）               |    N     |          |
 |    phone    |   char   |  11  |                    电话号码                     |    N     |          |

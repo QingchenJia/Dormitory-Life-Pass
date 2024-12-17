@@ -1,6 +1,7 @@
 package dormitorylifepass;
 
 import dormitorylifepass.entity.Employee;
+import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.EmployeeService;
 import dormitorylifepass.utils.SHA256Util;
@@ -34,7 +35,7 @@ class DormitoryLifePassApplicationTests {
 
     @Test
     void testSelectEmployeeByType() {
-        List<Employee> employees = employeeService.selectByType(EmployeeType.DORMITORY_MANAGER);
+        List<Employee> employees = employeeService.selectList(EmployeeType.DORMITORY_MANAGER, EmployeeStatus.ARRANGED);
         employees.forEach(System.out::println);
     }
 }
