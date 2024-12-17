@@ -1,6 +1,7 @@
 package dormitorylifepass.entity;
 
 import dormitorylifepass.common.BaseEntity;
+import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.enums.Gender;
 import lombok.Data;
@@ -20,4 +21,6 @@ public class Employee extends BaseEntity {
     private String phone;
 
     private EmployeeType type;
+
+    private EmployeeStatus status;
 }

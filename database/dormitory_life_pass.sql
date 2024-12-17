@@ -94,6 +94,7 @@ CREATE TABLE `employee`  (
   `gender` tinyint NOT NULL COMMENT '性别（1：男，0：女）',
   `phone` char(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '电话号码',
   `type` tinyint NOT NULL COMMENT '身份（1：宿舍管理员，2：维修工，0：超级管理员）',
+  `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态（1：已安排，0：未安排，默认为0）',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `create_user` bigint NULL DEFAULT NULL COMMENT '创建用户',
