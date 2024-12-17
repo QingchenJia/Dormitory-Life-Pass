@@ -49,4 +49,33 @@ public class BuildingController {
         // 返回一个包含分页对象的成功响应
         return R.success(pageInfo);
     }
+
+    /**
+     * 根据ID获取建筑信息
+     *
+     * @param id 建筑的唯一标识符
+     * @return 返回一个包含建筑信息的响应对象
+     */
+    @GetMapping("/{id}")
+    public R<Building> queryOne(@PathVariable Long id) {
+        // 通过建筑ID调用服务层方法获取建筑实体
+        Building building = buildingService.getById(id);
+        // 返回成功响应，包含找到的建筑信息
+        return R.success(building);
+    }
+
+    /**
+     * 更新建筑信息的接口
+     * 使用PUT请求映射来接收更新的建筑数据
+     *
+     * @param building 包含更新信息的建筑对象，通过请求体传递
+     * @return 返回一个响应对象，包含更新操作的结果信息
+     */
+    @PutMapping
+    public R<String> update(@RequestBody Building building) {
+        // 调用服务层方法更新建筑信息
+        buildingService.updateById(building);
+        // 返回成功响应
+        return R.success("修改成功");
+    }
 }
