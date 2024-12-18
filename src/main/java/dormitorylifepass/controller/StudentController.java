@@ -1,15 +1,13 @@
 package dormitorylifepass.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import dormitorylifepass.common.R;
 import dormitorylifepass.entity.Student;
 import dormitorylifepass.service.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/student")
@@ -74,5 +72,52 @@ public class StudentController {
     public R<String> save(@RequestBody Student student) {
         studentService.insert(student);
         return R.success("添加成功");
+    }
+
+    /**
+     * 处理学生信息分页查询请求
+     *
+     * @param page     分页查询的当前页数
+     * @param pageSize 每页显示的学生信息数量
+     * @param name     学生姓名的模糊查询条件
+     * @return 返回分页查询结果封装对象
+     */
+    @GetMapping("/page")
+    public R<Page<Student>> page(int page, int pageSize, String name) {
+        // 创建分页查询对象，传入当前页和每页大小
+        Page<Student> pageInfo = new Page<>(page, pageSize);
+        // 调用服务层方法执行分页查询，并根据学生姓名进行模糊查询
+        studentService.selectPage(pageInfo, name);
+        // 返回查询结果，封装在自定义响应对象中
+        return R.success(pageInfo);
+    }
+
+    /**
+     * 根据学生ID查询学生信息
+     *
+     * @param id 学生的唯一标识符
+     * @return 返回一个响应对象，包含查询到的学生信息
+     */
+    @GetMapping("/{id}")
+    public R<Student> queryOne(@PathVariable("id") Long id) {
+        // 根据ID从数据库中获取学生信息
+        Student studentDB = studentService.getById(id);
+        // 返回成功响应，包含查询到的学生信息
+        return R.success(studentDB);
+    }
+
+    /**
+     * 更新学生信息
+     * <p>
+     * 该方法通过PUT请求接收一个学生对象，用于更新数据库中对应的学生记录
+     * 使用了Spring框架的@PutMapping注解，表明这是一个处理PUT请求的方法
+     *
+     * @param student 包含更新后学生信息的Student对象，由请求体中获取
+     * @return 返回一个R类型的对象，表示更新操作的结果信息
+     */
+    @PutMapping
+    public R<String> update(@RequestBody Student student) {
+        studentService.updateById(student);
+        return R.success("修改成功");
     }
 }

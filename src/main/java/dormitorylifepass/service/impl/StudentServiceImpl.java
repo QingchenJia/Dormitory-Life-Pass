@@ -2,6 +2,7 @@ package dormitorylifepass.service.impl;
 
 import ch.qos.logback.core.util.StringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dormitorylifepass.entity.Student;
 import dormitorylifepass.mapper.StudentMapper;
@@ -68,5 +69,24 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         student.setPassword(SHA256Util.encrypt("123456"));
         // 保存学生信息到数据库
         save(student);
+    }
+
+    /**
+     * 根据学生姓名模糊查询并按学生编号升序排序分页
+     *
+     * @param page 分页对象，用于封装分页查询所需的页码、页大小等信息
+     * @param name 学生姓名的关键词，用于模糊查询
+     */
+    @Override
+    public void selectPage(Page<Student> page, String name) {
+        // 创建Lambda查询条件包装器，用于构建查询条件和排序规则
+        LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 判断姓名关键词是否非空，如果非空则添加模糊查询条件，并按学生编号升序排序
+        queryWrapper.like(StringUtil.notNullNorEmpty(name), Student::getName, name)
+                    .orderByAsc(Student::getStudentNum);
+
+        // 执行分页查询
+        page(page, queryWrapper);
     }
 }
