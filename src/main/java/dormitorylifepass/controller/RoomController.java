@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/room")
 @Slf4j
@@ -85,5 +87,10 @@ public class RoomController {
         roomService.updateById(room);
         // 返回成功响应，包含成功消息
         return R.success("修改成功");
+    }
+
+    @GetMapping("/list")
+    public R<List<Room>> list(Integer gender){
+        return null;
     }
 }

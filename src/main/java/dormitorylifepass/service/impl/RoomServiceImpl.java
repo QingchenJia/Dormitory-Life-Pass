@@ -4,13 +4,23 @@ import ch.qos.logback.core.util.StringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import dormitorylifepass.entity.Building;
 import dormitorylifepass.entity.Room;
+import dormitorylifepass.enums.BuildingType;
+import dormitorylifepass.enums.RoomStatus;
 import dormitorylifepass.mapper.RoomMapper;
+import dormitorylifepass.service.BuildingService;
 import dormitorylifepass.service.RoomService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements RoomService {
+    @Autowired
+    private BuildingService buildingService;
+
     /**
      * 根据楼层查询房间信息
      *
@@ -28,5 +38,31 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
 
         // 执行分页查询
         page(page, queryWrapper);
+    }
+
+    /**
+     * 根据性别选择房间列表
+     * 此方法首先根据性别类型获取相应的楼宇列表，然后获取这些楼宇下的所有房间
+     *
+     * @param gender 性别类型，用于筛选楼宇类型
+     * @return 符合条件的房间列表
+     */
+    @Override
+    public List<Room> selectList(Integer gender) {
+        // 创建楼宇查询条件，筛选出符合性别类型的楼宇
+        LambdaQueryWrapper<Building> queryWrapperBuilding = new LambdaQueryWrapper<>();
+        queryWrapperBuilding.eq(Building::getType, BuildingType.toEnum(gender));
+
+        // 查询符合条件的楼宇列表
+        List<Building> buildingsDB = buildingService.list(queryWrapperBuilding);
+        List<Long> buildingIdsDB = buildingsDB.stream().map(Building::getId).toList();
+
+        // 创建房间查询条件，筛选出属于查询楼宇列表中的房间
+        LambdaQueryWrapper<Room> queryWrapperRoom = new LambdaQueryWrapper<>();
+        queryWrapperRoom.in(Room::getBuildingId, buildingIdsDB)
+                .eq(Room::getStatus, RoomStatus.AVAILABLE);
+
+        // 返回符合条件的房间列表
+        return list(queryWrapperRoom);
     }
 }

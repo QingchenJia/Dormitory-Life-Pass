@@ -4,6 +4,7 @@ import dormitorylifepass.entity.Employee;
 import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.EmployeeService;
+import dormitorylifepass.service.RoomService;
 import dormitorylifepass.utils.SHA256Util;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import java.util.List;
 class DormitoryLifePassApplicationTests {
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private RoomService roomService;
 
     @Test
     void contextLoads() {
@@ -37,5 +40,10 @@ class DormitoryLifePassApplicationTests {
     void testSelectEmployeeByType() {
         List<Employee> employees = employeeService.selectList(EmployeeType.DORMITORY_MANAGER, EmployeeStatus.ARRANGED);
         employees.forEach(System.out::println);
+    }
+
+    @Test
+    void testSelectRoomByGender() {
+        roomService.selectList(1);
     }
 }
