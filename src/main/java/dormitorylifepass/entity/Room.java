@@ -9,8 +9,6 @@ import lombok.Data;
 public class Room extends BaseEntity {
     private Integer floor;
 
-    private Integer number;
-
     private String name;
 
     private Integer maxNum;

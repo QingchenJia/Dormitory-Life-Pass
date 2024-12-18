@@ -133,8 +133,7 @@ DROP TABLE IF EXISTS `room`;
 CREATE TABLE `room`  (
   `id` bigint NOT NULL COMMENT '唯一标识符',
   `floor` tinyint NOT NULL COMMENT '楼层',
-  `number` tinyint NOT NULL COMMENT '序号',
-  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '名称',
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '名称',
   `max_num` tinyint NOT NULL COMMENT '容量',
   `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态（1：可入住，0：不可入住），默认为1',
   `building_id` bigint NOT NULL COMMENT '宿舍楼唯一标识符',
@@ -145,6 +144,7 @@ CREATE TABLE `room`  (
   `is_deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除标志位',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `room_fk_building`(`building_id` ASC) USING BTREE,
+  UNIQUE INDEX `name`(`name` ASC) USING BTREE,
   CONSTRAINT `room_fk_building` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '寝室表' ROW_FORMAT = Dynamic;
 

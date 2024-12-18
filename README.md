@@ -79,8 +79,7 @@
 | :---------: | :------: | :--: | :-------------------------------------: | :------: | :------------: |
 |     id      |  BigInt  |      |               唯一标识符                |    N     |      主键      |
 |    floor    | TinyInt  |      |                  楼层                   |    N     |                |
-|   number    | TinyInt  |      |                  序号                   |    N     |                |
-|    name     | varchar  |  20  |                  名称                   |    Y     |                |
+|    name     | varchar  |  20  |                  名称                   |    N     |    唯一索引    |
 |   max_num   | TinyInt  |      |                  容量                   |    N     |                |
 |   status    | TinyInt  |      | 状态（1：可入住，0：不可入住），默认为1 |    N     |                |
 | building_id |  BigInt  |      |            宿舍楼唯一标识符             |    N     | 外键（宿舍楼） |
