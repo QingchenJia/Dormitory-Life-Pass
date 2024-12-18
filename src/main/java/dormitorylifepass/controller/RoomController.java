@@ -57,4 +57,33 @@ public class RoomController {
         // 返回包含分页查询结果的响应对象
         return R.success(pageInfo);
     }
+
+    /**
+     * 根据房间ID查询房间信息
+     *
+     * @param id 房间ID，用于标识特定的房间
+     * @return 返回一个包含房间信息的响应对象
+     */
+    @GetMapping("/{id}")
+    public R<Room> queryOne(@PathVariable Long id) {
+        // 调用roomService的getById方法根据房间ID查询房间信息
+        Room room = roomService.getById(id);
+        // 返回包含查询结果的响应对象
+        return R.success(room);
+    }
+
+    /**
+     * 更新房间信息的接口方法
+     * 使用HTTP PUT请求来更新数据库中特定房间的信息
+     *
+     * @param room 包含更新信息的房间对象，通过请求体传递
+     * @return 返回一个表示操作结果的响应对象，包含成功消息
+     */
+    @PutMapping
+    public R<String> update(@RequestBody Room room) {
+        // 调用服务层方法，根据房间对象的ID更新房间信息
+        roomService.updateById(room);
+        // 返回成功响应，包含成功消息
+        return R.success("修改成功");
+    }
 }
