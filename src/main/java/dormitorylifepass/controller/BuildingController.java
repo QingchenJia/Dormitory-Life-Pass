@@ -74,7 +74,7 @@ public class BuildingController {
     @PutMapping
     public R<String> update(@RequestBody Building building) {
         // 调用服务层方法更新建筑信息
-        buildingService.updateById(building);
+        buildingService.updateBuilding(building);
         // 返回成功响应
         return R.success("修改成功");
     }

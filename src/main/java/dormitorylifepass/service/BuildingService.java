@@ -6,4 +6,6 @@ import dormitorylifepass.entity.Building;
 
 public interface BuildingService extends IService<Building> {
     void selectPage(Page<Building> page, String name);
+
+    void updateBuilding(Building building);
 }
