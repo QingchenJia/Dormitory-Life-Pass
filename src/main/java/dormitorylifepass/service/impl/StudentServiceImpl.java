@@ -84,7 +84,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
         // 判断姓名关键词是否非空，如果非空则添加模糊查询条件，并按学生编号升序排序
         queryWrapper.like(StringUtil.notNullNorEmpty(name), Student::getName, name)
-                    .orderByAsc(Student::getStudentNum);
+                .orderByAsc(Student::getStudentNum);
 
         // 执行分页查询
         page(page, queryWrapper);

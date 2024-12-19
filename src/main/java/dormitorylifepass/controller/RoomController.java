@@ -2,6 +2,7 @@ package dormitorylifepass.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import dormitorylifepass.common.R;
+import dormitorylifepass.dto.RoomDto;
 import dormitorylifepass.entity.Room;
 import dormitorylifepass.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,8 @@ public class RoomController {
         // 记录新增房间的日志，打印房间信息
         log.info("新增房间，房间信息：{}", room);
 
-        // 调用roomService的save方法，保存房间信息
-        roomService.save(room);
+        // 调用roomService的insertRoom方法保存房间信息
+        roomService.insertRoom(room);
 
         // 返回成功保存后的响应信息
         return R.success("新增成功");
@@ -89,8 +90,31 @@ public class RoomController {
         return R.success("修改成功");
     }
 
+    /**
+     * 根据性别获取房间列表
+     *
+     * @param gender 性别，用于筛选房间列表，0通常代表女性，1通常代表男性
+     * @return 返回一个Result对象，包含根据性别筛选后的房间列表
+     */
     @GetMapping("/list")
-    public R<List<Room>> list(Integer gender){
-        return null;
+    public R<List<Room>> list(Integer gender) {
+        // 调用RoomService的selectList方法，根据性别筛选房间列表
+        List<Room> roomsDB = roomService.selectList(gender);
+        // 返回成功结果，包含从数据库中获取的房间列表
+        return R.success(roomsDB);
+    }
+
+    /**
+     * 获取指定楼宇的房间信息
+     *
+     * @param buildingId 楼宇ID，用于指定查询的楼宇
+     * @return 返回一个封装了房间信息列表的响应对象
+     */
+    @GetMapping("/info")
+    public R<List<RoomDto>> info(Long buildingId) {
+        // 调用服务层方法，查询指定楼宇的房间信息
+        List<RoomDto> roomDtos = roomService.searchInfo(buildingId);
+        // 返回成功响应，包含房间信息列表
+        return R.success(roomDtos);
     }
 }

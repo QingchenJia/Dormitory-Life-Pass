@@ -1,10 +1,12 @@
 package dormitorylifepass;
 
+import dormitorylifepass.dto.RoomDto;
 import dormitorylifepass.entity.Employee;
 import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.EmployeeService;
 import dormitorylifepass.service.RoomService;
+import dormitorylifepass.service.impl.RoomServiceImpl;
 import dormitorylifepass.utils.SHA256Util;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ class DormitoryLifePassApplicationTests {
     private EmployeeService employeeService;
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private RoomServiceImpl roomServiceImpl;
 
     @Test
     void contextLoads() {
@@ -45,5 +49,16 @@ class DormitoryLifePassApplicationTests {
     @Test
     void testSelectRoomByGender() {
         roomService.selectList(1);
+    }
+
+    @Test
+    void testRoomUpdateStatus() {
+        roomServiceImpl.updateStatus();
+    }
+
+    @Test
+    void testSearchInfo() {
+        List<RoomDto> roomDtos = roomService.searchInfo(1868569239229210626L);
+        roomDtos.forEach(System.out::println);
     }
 }
