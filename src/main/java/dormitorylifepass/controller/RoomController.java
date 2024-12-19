@@ -84,6 +84,8 @@ public class RoomController {
      */
     @PutMapping
     public R<String> update(@RequestBody Room room) {
+        // 记录更新房间的日志信息
+        log.info("修改房间信息：{}", room);
         // 调用服务层方法，根据房间对象的ID更新房间信息
         roomService.updateById(room);
         // 返回成功响应，包含成功消息

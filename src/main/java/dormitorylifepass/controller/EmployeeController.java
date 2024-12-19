@@ -126,6 +126,8 @@ public class EmployeeController {
      */
     @PutMapping
     public R<String> update(@RequestBody Employee employee) {
+        // 记录更新员工的日志信息
+        log.info("员工信息修改：{}", employee);
         // 调用服务层方法，根据员工对象中的信息更新数据库
         employeeService.updateById(employee);
         // 返回成功响应，表示员工信息修改成功

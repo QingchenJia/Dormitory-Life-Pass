@@ -70,6 +70,8 @@ public class StudentController {
      */
     @PostMapping
     public R<String> save(@RequestBody Student student) {
+        // 记录新增学生的日志信息
+        log.info("新增学生信息：{}", student);
         studentService.insert(student);
         return R.success("添加成功");
     }
@@ -117,6 +119,8 @@ public class StudentController {
      */
     @PutMapping
     public R<String> update(@RequestBody Student student) {
+        // 记录更新员工的日志信息
+        log.info("修改学生信息：{}", student);
         studentService.updateById(student);
         return R.success("修改成功");
     }

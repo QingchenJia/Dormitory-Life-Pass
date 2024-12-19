@@ -25,6 +25,8 @@ public class BuildingController {
      */
     @PostMapping
     public R<String> save(@RequestBody Building building) {
+        // 记录新增楼栋的日志信息
+        log.info("新增建筑物，建筑物信息：{}", building);
         buildingService.save(building);
         return R.success("新增成功");
     }
@@ -73,6 +75,8 @@ public class BuildingController {
      */
     @PutMapping
     public R<String> update(@RequestBody Building building) {
+        // 记录更新楼栋的日志信息
+        log.info("修改建筑信息：{}", building);
         // 调用服务层方法更新建筑信息
         buildingService.updateBuilding(building);
         // 返回成功响应
