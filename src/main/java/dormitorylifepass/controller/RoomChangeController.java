@@ -1,14 +1,13 @@
 package dormitorylifepass.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import dormitorylifepass.common.R;
+import dormitorylifepass.dto.RoomChangeDto;
 import dormitorylifepass.entity.RoomChange;
 import dormitorylifepass.service.RoomChangeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/roomChange")
@@ -16,6 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoomChangeController {
     @Autowired
     private RoomChangeService roomChangeService;
+
+    @GetMapping("/page")
+    public R<Page<RoomChangeDto>> page(int page, int pageSize) {
+        // 创建分页对象，传入当前页码和每页大小
+        Page<RoomChange> pageInfo = new Page<>(page, pageSize);
+        // 调用服务层方法执行分页查询
+        Page<RoomChangeDto> pageResult = roomChangeService.selectPage(pageInfo);
+        // 返回包含分页查询结果的响应对象
+        return R.success(pageResult);
+    }
 
     /**
      * 处理宿舍调换申请的接口

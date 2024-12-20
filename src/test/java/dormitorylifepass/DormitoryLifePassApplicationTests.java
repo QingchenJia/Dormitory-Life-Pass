@@ -1,10 +1,14 @@
 package dormitorylifepass;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import dormitorylifepass.dto.RoomChangeDto;
 import dormitorylifepass.dto.RoomDto;
 import dormitorylifepass.entity.Employee;
+import dormitorylifepass.entity.RoomChange;
 import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.EmployeeService;
+import dormitorylifepass.service.RoomChangeService;
 import dormitorylifepass.service.RoomService;
 import dormitorylifepass.service.impl.RoomServiceImpl;
 import dormitorylifepass.utils.SHA256Util;
@@ -22,6 +26,8 @@ class DormitoryLifePassApplicationTests {
     private RoomService roomService;
     @Autowired
     private RoomServiceImpl roomServiceImpl;
+    @Autowired
+    private RoomChangeService roomChangeService;
 
     @Test
     void contextLoads() {
@@ -60,5 +66,11 @@ class DormitoryLifePassApplicationTests {
     void testSearchInfo() {
         List<RoomDto> roomDtos = roomService.searchInfo(1868569239229210626L);
         roomDtos.forEach(System.out::println);
+    }
+
+    @Test
+    void testSelectRoomChangeDtoPage() {
+        Page<RoomChangeDto> roomChangeDtoPage = roomChangeService.selectPage(new Page<RoomChange>(1, 10));
+        roomChangeDtoPage.getRecords().forEach(System.out::println);
     }
 }
