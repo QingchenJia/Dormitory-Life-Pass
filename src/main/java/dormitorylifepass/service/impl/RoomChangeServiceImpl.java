@@ -1,13 +1,16 @@
 package dormitorylifepass.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import dormitorylifepass.common.CustomException;
 import dormitorylifepass.dto.RoomChangeDto;
 import dormitorylifepass.entity.Employee;
 import dormitorylifepass.entity.Room;
 import dormitorylifepass.entity.RoomChange;
 import dormitorylifepass.entity.Student;
 import dormitorylifepass.enums.RoomChangeStatus;
+import dormitorylifepass.enums.RoomStatus;
 import dormitorylifepass.mapper.RoomChangeMapper;
 import dormitorylifepass.service.EmployeeService;
 import dormitorylifepass.service.RoomChangeService;
@@ -16,6 +19,7 @@ import dormitorylifepass.service.StudentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,7 +31,6 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
     private RoomService roomService;
     @Autowired
     private EmployeeService employeeService;
-
 
     /**
      * 插入房间变更记录
@@ -96,5 +99,53 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
 
         // 返回包含转换后数据的分页对象
         return roomChangeDtoPage;
+    }
+
+    /**
+     * 更新房间变更请求的状态
+     * 此方法使用事务处理，以确保数据一致性
+     * 当状态更新为接受（ACCEPT）时，还会更新相关学生的房间分配
+     *
+     * @param ids    房间变更请求的ID列表
+     * @param status 新的状态值
+     */
+    @Override
+    @Transactional
+    public void updateStatus(List<Long> ids, Integer status) {
+        ids.forEach(id -> {
+            // 创建更新条件对象，用于更新房间变更请求的状态
+            LambdaUpdateWrapper<RoomChange> updateWrapperRoomChange = new LambdaUpdateWrapper<>();
+
+            // 设置更新条件：根据ID更新状态
+            updateWrapperRoomChange.set(RoomChange::getStatus, RoomChangeStatus.toEnum(status))
+                    .eq(RoomChange::getId, id);
+
+            // 执行状态更新
+            update(updateWrapperRoomChange);
+
+            // 如果状态更新为接受（ACCEPT），则更新相关学生的房间分配
+            if (RoomChangeStatus.ACCEPT.getCode().equals(status)) {
+                // 根据ID获取房间变更请求的详细信息
+                RoomChange roomChangeDB = getById(id);
+                Long newRoomId = roomChangeDB.getNewRoomId();
+
+                // 检查新房间是否可用
+                Room newRoomDB = roomService.getById(newRoomId);
+                if (RoomStatus.UNAVAILABLE.equals(newRoomDB.getStatus())) {
+                    throw new CustomException("该房间不可入住");
+                }
+
+                // 创建更新条件对象，用于更新学生的房间ID
+                LambdaUpdateWrapper<Student> updateWrapperStudent = new LambdaUpdateWrapper<>();
+                updateWrapperStudent.set(Student::getRoomId, roomChangeDB.getNewRoomId())
+                        .eq(Student::getId, roomChangeDB.getStudentId());
+
+                // 执行学生房间ID的更新
+                studentService.update(updateWrapperStudent);
+
+                // 更新房间状态
+                roomService.updateStatus();
+            }
+        });
     }
 }

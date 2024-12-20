@@ -15,4 +15,6 @@ public interface RoomService extends IService<Room> {
     void insertRoom(Room room);
 
     List<RoomDto> searchInfo(Long buildingId);
+
+    void updateStatus();
 }

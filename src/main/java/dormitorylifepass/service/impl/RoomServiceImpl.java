@@ -140,6 +140,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
      * 根据每个房间的入住学生数量与房间最大容纳人数来更新房间的状态
      * 如果房间的入住学生数量少于最大容纳人数，则房间状态为可用，否则为不可用
      */
+    @Override
     public void updateStatus() {
         // 获取所有房间列表
         List<Room> roomsDB = list();
