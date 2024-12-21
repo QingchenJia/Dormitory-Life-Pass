@@ -128,15 +128,13 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
     @Transactional
     public void updateStatus(List<Long> ids, Integer status) {
         ids.forEach(id -> {
-            // 创建更新条件对象，用于更新房间变更请求的状态
-            LambdaUpdateWrapper<RoomChange> updateWrapperRoomChange = new LambdaUpdateWrapper<>();
+            // 创建一个RoomChange对象来更新状态
+            RoomChange roomChange = new RoomChange();
+            roomChange.setId(id);
+            roomChange.setStatus(RoomChangeStatus.toEnum(status));
 
-            // 设置更新条件：根据ID更新状态
-            updateWrapperRoomChange.set(RoomChange::getStatus, RoomChangeStatus.toEnum(status))
-                    .eq(RoomChange::getId, id);
-
-            // 执行状态更新
-            update(updateWrapperRoomChange);
+            // 更新房间变更请求的状态
+            updateById(roomChange);
 
             // 如果状态更新为接受（ACCEPT），则更新相关学生的房间分配
             if (RoomChangeStatus.ACCEPT.getCode().equals(status)) {
@@ -167,7 +165,7 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
     /**
      * 根据学生ID和申请状态查询宿舍变更记录
      *
-     * @param id 学生ID，用于查询该学生的宿舍变更记录
+     * @param id     学生ID，用于查询该学生的宿舍变更记录
      * @param status 申请状态，用于过滤特定状态的变更记录，如果为null，则不考虑状态
      * @return 返回一个包含宿舍变更信息的列表
      */
