@@ -12,5 +12,7 @@ public interface RoomChangeService extends IService<RoomChange> {
 
     Page<RoomChangeDto> selectPage(Page<RoomChange> page);
 
-    void updateStatus(List<Long> ids,Integer status);
+    void updateStatus(List<Long> ids, Integer status);
+
+    List<RoomChangeDto> selectList(Long id, Integer status);
 }

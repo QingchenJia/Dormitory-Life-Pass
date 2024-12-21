@@ -105,4 +105,19 @@ public class RoomChangeController {
         // 返回成功响应
         return R.success("已拒绝");
     }
+
+    /**
+     * 获取房间变更记录列表
+     * <p>
+     * 本接口用于查询特定房间的变更记录，可以根据房间ID和变更状态进行筛选
+     *
+     * @param id 房间ID，用于指定需要查询变更记录的房间
+     * @param status 变更状态，用于筛选特定状态的变更记录
+     * @return 返回一个封装了房间变更记录列表的响应对象
+     */
+    @GetMapping("/list")
+    public R<List<RoomChangeDto>> list(Long id, Integer status) {
+        List<RoomChangeDto> roomChangeDtos = roomChangeService.selectList(id, status);
+        return R.success(roomChangeDtos);
+    }
 }

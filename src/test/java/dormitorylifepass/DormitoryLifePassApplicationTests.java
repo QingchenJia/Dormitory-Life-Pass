@@ -25,8 +25,6 @@ class DormitoryLifePassApplicationTests {
     @Autowired
     private RoomService roomService;
     @Autowired
-    private RoomServiceImpl roomServiceImpl;
-    @Autowired
     private RoomChangeService roomChangeService;
 
     @Test
@@ -59,7 +57,7 @@ class DormitoryLifePassApplicationTests {
 
     @Test
     void testRoomUpdateStatus() {
-        roomServiceImpl.updateStatus();
+        roomService.updateStatus();
     }
 
     @Test
@@ -72,5 +70,11 @@ class DormitoryLifePassApplicationTests {
     void testSelectRoomChangeDtoPage() {
         Page<RoomChangeDto> roomChangeDtoPage = roomChangeService.selectPage(new Page<RoomChange>(1, 10));
         roomChangeDtoPage.getRecords().forEach(System.out::println);
+    }
+
+    @Test
+    void testSelectRoomChangeListByUserId() {
+        List<RoomChangeDto> roomChangeDtos = roomChangeService.selectList(1868988253831430144L, 4);
+        System.out.println(roomChangeDtos);
     }
 }

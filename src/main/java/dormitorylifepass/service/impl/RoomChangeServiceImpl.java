@@ -1,5 +1,6 @@
 package dormitorylifepass.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -68,10 +69,30 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
         // 复制分页信息到新的分页对象，但不包括实际的记录数据
         BeanUtils.copyProperties(page, roomChangeDtoPage, "records");
 
+        List<RoomChangeDto> roomChangeDtos = toDtos(roomChangesDB);
+
+        // 将转换后的DTO列表设置到分页对象中
+        roomChangeDtoPage.setRecords(roomChangeDtos);
+
+        // 返回包含转换后数据的分页对象
+        return roomChangeDtoPage;
+    }
+
+    /**
+     * 将RoomChange对象列表转换为RoomChangeDto对象列表
+     * 此方法主要用于将从数据库查询到的房间变更记录转换为包含学生和房间名称信息的DTO对象列表
+     *
+     * @param roomChangesDB 从数据库查询到的RoomChange对象列表
+     * @return 转换后的RoomChangeDto对象列表
+     */
+    private List<RoomChangeDto> toDtos(List<RoomChange> roomChangesDB) {
         // 将查询到的房间变更记录转换为DTO对象，包含学生和房间的名称信息
-        List<RoomChangeDto> roomChangeDtos = roomChangesDB.stream().map(roomChange -> {
+        // 返回转换后的DTO对象列表
+        return roomChangesDB.stream().map(roomChange -> {
+            // 创建一个新的RoomChangeDto对象
             RoomChangeDto roomChangeDto = new RoomChangeDto();
 
+            // 使用Spring框架的工具类复制RoomChange对象的属性到RoomChangeDto对象
             BeanUtils.copyProperties(roomChange, roomChangeDto);
 
             // 根据学生ID查询学生信息
@@ -93,12 +114,6 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
             // 返回转换后的DTO对象
             return roomChangeDto;
         }).toList();
-
-        // 将转换后的DTO列表设置到分页对象中
-        roomChangeDtoPage.setRecords(roomChangeDtos);
-
-        // 返回包含转换后数据的分页对象
-        return roomChangeDtoPage;
     }
 
     /**
@@ -147,5 +162,32 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
                 roomService.updateStatus();
             }
         });
+    }
+
+    /**
+     * 根据学生ID和申请状态查询宿舍变更记录
+     *
+     * @param id 学生ID，用于查询该学生的宿舍变更记录
+     * @param status 申请状态，用于过滤特定状态的变更记录，如果为null，则不考虑状态
+     * @return 返回一个包含宿舍变更信息的列表
+     */
+    @Override
+    public List<RoomChangeDto> selectList(Long id, Integer status) {
+        // 创建查询条件构建器
+        LambdaQueryWrapper<RoomChange> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 根据提供的状态和学生ID构建查询条件
+        queryWrapper.eq(status != null, RoomChange::getStatus, RoomChangeStatus.toEnum(status))
+                .eq(RoomChange::getStudentId, id)
+                .or()
+                .eq(RoomChange::getOldEmployeeId, id)
+                .or()
+                .eq(RoomChange::getNewEmployeeId, id);
+
+        // 执行查询，获取符合条件的宿舍变更记录列表
+        List<RoomChange> roomChangesDB = list(queryWrapper);
+
+        // 将查询到的实体对象列表转换为DTO列表，并返回
+        return toDtos(roomChangesDB);
     }
 }
