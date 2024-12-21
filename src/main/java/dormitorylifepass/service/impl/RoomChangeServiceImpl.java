@@ -6,17 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dormitorylifepass.common.CustomException;
 import dormitorylifepass.dto.RoomChangeDto;
-import dormitorylifepass.entity.Employee;
-import dormitorylifepass.entity.Room;
-import dormitorylifepass.entity.RoomChange;
-import dormitorylifepass.entity.Student;
+import dormitorylifepass.entity.*;
 import dormitorylifepass.enums.RoomChangeStatus;
 import dormitorylifepass.enums.RoomStatus;
 import dormitorylifepass.mapper.RoomChangeMapper;
-import dormitorylifepass.service.EmployeeService;
-import dormitorylifepass.service.RoomChangeService;
-import dormitorylifepass.service.RoomService;
-import dormitorylifepass.service.StudentService;
+import dormitorylifepass.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +26,8 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
     private RoomService roomService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private BuildingService buildingService;
 
     /**
      * 插入房间变更记录
@@ -42,6 +38,23 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
      */
     @Override
     public void insertRoomChange(RoomChange roomChange) {
+        // 根据学生ID获取学生信息
+        Student student = studentService.getById(roomChange.getStudentId());
+        // 根据学生当前的房间ID获取房间信息
+        Room oldRoom = roomService.getById(student.getRoomId());
+        // 根据新的房间ID获取房间信息
+        Room newRoom = roomService.getById(roomChange.getNewRoomId());
+
+        // 根据旧房间所属的楼栋ID获取楼栋信息
+        Building oldBuilding = buildingService.getById(oldRoom.getBuildingId());
+        // 根据新房间所属的楼栋ID获取楼栋信息
+        Building newBuilding = buildingService.getById(newRoom.getBuildingId());
+
+        // 设置旧楼栋对应的员工ID
+        roomChange.setOldEmployeeId(oldBuilding.getEmployeeId());
+        // 设置新楼栋对应的员工ID
+        roomChange.setNewEmployeeId(newBuilding.getEmployeeId());
+
         // 设置房间变更的状态为已请求
         roomChange.setStatus(RoomChangeStatus.REQUESTED);
         // 保存房间变更记录

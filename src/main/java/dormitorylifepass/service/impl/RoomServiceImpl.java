@@ -17,6 +17,7 @@ import dormitorylifepass.service.StudentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -115,7 +116,8 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
         List<Room> roomsDB = list(queryWrapperRoom);
 
         // 将房间实体转换为DTO，并为每个DTO设置楼宇名称和学生信息
-        List<RoomDto> roomDtos = roomsDB.stream().map(room -> {
+        // 返回包含所有房间DTO的列表
+        return roomsDB.stream().map(room -> {
             RoomDto roomDto = new RoomDto();
             BeanUtils.copyProperties(room, roomDto);
             roomDto.setBuildingName(buildingDB.getName());
@@ -130,9 +132,6 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
             roomDto.setPeopleNum(studentsDB.size());
             return roomDto;
         }).toList();
-
-        // 返回包含所有房间DTO的列表
-        return roomDtos;
     }
 
     /**
@@ -141,6 +140,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
      * 如果房间的入住学生数量少于最大容纳人数，则房间状态为可用，否则为不可用
      */
     @Override
+    @Transactional
     public void updateStatus() {
         // 获取所有房间列表
         List<Room> roomsDB = list();
