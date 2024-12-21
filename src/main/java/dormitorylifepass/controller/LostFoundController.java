@@ -74,4 +74,49 @@ public class LostFoundController {
         // 返回成功响应，包含失物招领列表
         return R.success(lostFoundsDB);
     }
+
+    /**
+     * 更新寻物启事或失物招领信息
+     * <p>
+     * 该方法通过PUT请求接收一个LostFound对象，将其更新到数据库中
+     * 主要用于用户修改已发布的寻物启事或失物招领信息
+     *
+     * @param lostFound 包含更新信息的寻物启事或失物招领对象，通过请求体传递
+     * @return 返回一个表示操作结果的响应对象，包含修改成功的消息
+     */
+    @PutMapping
+    public R<String> update(@RequestBody LostFound lostFound) {
+        lostFoundService.updateById(lostFound);
+        return R.success("修改成功");
+    }
+
+    /**
+     * 处理解决物品遗失问题的请求
+     * 此方法接收一个Long类型的ID列表，代表遗失物品的记录ID
+     * 它调用lostFoundService的solve方法来标记这些物品记录为已解决
+     * 完成后，返回一个成功的响应，消息为"已解决"
+     *
+     * @param ids 遗失物品记录的ID列表
+     * @return 返回一个表示成功处理请求的响应，包含"已解决"的消息
+     */
+    @PutMapping("/solve")
+    public R<String> solve(@RequestParam("ids") List<Long> ids) {
+        lostFoundService.solve(ids);
+        return R.success("已解决");
+    }
+
+    /**
+     * 处理删除操作的HTTP请求
+     * 通过提供的ID删除对应的失物招领信息
+     *
+     * @param id 失物招领信息的唯一标识符
+     * @return 返回一个表示操作结果的响应对象
+     */
+    @DeleteMapping("/{id}")
+    public R<String> delete(@PathVariable Long id) {
+        // 调用服务层方法，根据提供的ID删除失物招领信息
+        lostFoundService.removeById(id);
+        // 返回删除成功的响应对象
+        return R.success("删除成功");
+    }
 }

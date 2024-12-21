@@ -10,6 +10,7 @@ import dormitorylifepass.service.LostFoundService;
 import dormitorylifepass.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,5 +57,27 @@ public class LostFoundServiceImpl extends ServiceImpl<LostFoundMapper, LostFound
 
         // 执行查询并返回结果列表
         return list(queryWrapper);
+    }
+
+    /**
+     * 解决失物招领问题
+     * 根据提供的失物招领ID列表，将这些失物招领的状态更新为已解决
+     * 此方法主要用于批量更新失物招领的状态，确保它们被标记为已解决
+     *
+     * @param ids 失物招领的ID列表，这些ID标识了需要被更新状态的失物招领项
+     */
+    @Override
+    @Transactional
+    public void solve(List<Long> ids) {
+        // 根据ID列表创建一个新的失物招领列表，每个失物招领的状态都被设置为已解决
+        List<LostFound> lostFounds = ids.stream().map(id -> {
+            LostFound lostFound = new LostFound();
+            lostFound.setId(id);
+            lostFound.setStatus(LostFoundStatus.SOLVED);
+            return lostFound;
+        }).toList();
+
+        // 批量更新失物招领列表，以反映它们的状态变化
+        updateBatchById(lostFounds);
     }
 }
