@@ -3,14 +3,16 @@ package dormitorylifepass;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import dormitorylifepass.dto.RoomChangeDto;
 import dormitorylifepass.dto.RoomDto;
+import dormitorylifepass.dto.RoomRepairDto;
 import dormitorylifepass.entity.Employee;
 import dormitorylifepass.entity.RoomChange;
+import dormitorylifepass.entity.RoomRepair;
 import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.EmployeeService;
 import dormitorylifepass.service.RoomChangeService;
+import dormitorylifepass.service.RoomRepairService;
 import dormitorylifepass.service.RoomService;
-import dormitorylifepass.service.impl.RoomServiceImpl;
 import dormitorylifepass.utils.SHA256Util;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ class DormitoryLifePassApplicationTests {
     private RoomService roomService;
     @Autowired
     private RoomChangeService roomChangeService;
+    @Autowired
+    private RoomRepairService roomRepairService;
 
     @Test
     void contextLoads() {
@@ -76,5 +80,11 @@ class DormitoryLifePassApplicationTests {
     void testSelectRoomChangeListByUserId() {
         List<RoomChangeDto> roomChangeDtos = roomChangeService.selectList(1868988253831430144L, 4);
         System.out.println(roomChangeDtos);
+    }
+
+    @Test
+    void testSelectRoomRepairDtoPage() {
+        Page<RoomRepairDto> roomRepairDtoPage = roomRepairService.selectPage(new Page<RoomRepair>(1, 10));
+        roomRepairDtoPage.getRecords().forEach(System.out::println);
     }
 }
