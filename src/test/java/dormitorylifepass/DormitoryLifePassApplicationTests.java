@@ -87,4 +87,10 @@ class DormitoryLifePassApplicationTests {
         Page<RoomRepairDto> roomRepairDtoPage = roomRepairService.selectPage(new Page<RoomRepair>(1, 10));
         roomRepairDtoPage.getRecords().forEach(System.out::println);
     }
+
+    @Test
+    void testSelectRoomRepairList() {
+        List<RoomRepairDto> roomRepairDtos = roomRepairService.selectList(1869243215647526914L, null);
+        System.out.println(roomRepairDtos);
+    }
 }

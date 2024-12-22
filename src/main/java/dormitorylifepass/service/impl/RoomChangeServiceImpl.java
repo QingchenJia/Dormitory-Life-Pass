@@ -82,7 +82,7 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
         // 复制分页信息到新的分页对象，但不包括实际的记录数据
         BeanUtils.copyProperties(page, roomChangeDtoPage, "records");
 
-        List<RoomChangeDto> roomChangeDtos = toDtos(roomChangesDB);
+        List<RoomChangeDto> roomChangeDtos = getDtos(roomChangesDB);
 
         // 将转换后的DTO列表设置到分页对象中
         roomChangeDtoPage.setRecords(roomChangeDtos);
@@ -98,7 +98,7 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
      * @param roomChangesDB 从数据库查询到的RoomChange对象列表
      * @return 转换后的RoomChangeDto对象列表
      */
-    private List<RoomChangeDto> toDtos(List<RoomChange> roomChangesDB) {
+    private List<RoomChangeDto> getDtos(List<RoomChange> roomChangesDB) {
         // 将查询到的房间变更记录转换为DTO对象，包含学生和房间的名称信息
         // 返回转换后的DTO对象列表
         return roomChangesDB.stream().map(roomChange -> {
@@ -199,6 +199,6 @@ public class RoomChangeServiceImpl extends ServiceImpl<RoomChangeMapper, RoomCha
         List<RoomChange> roomChangesDB = list(queryWrapper);
 
         // 将查询到的实体对象列表转换为DTO列表，并返回
-        return toDtos(roomChangesDB);
+        return getDtos(roomChangesDB);
     }
 }
