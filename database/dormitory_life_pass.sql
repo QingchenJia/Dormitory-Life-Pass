@@ -68,7 +68,7 @@ CREATE TABLE `check_in_detail`  (
   `id` bigint NOT NULL COMMENT '唯一标识符',
   `check_in_id` bigint NOT NULL COMMENT '签到活动唯一标识符',
   `student_id` bigint NOT NULL COMMENT '学生唯一标识符',
-  `description` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '签到详情描述',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '签到详情描述',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   `create_user` bigint NOT NULL COMMENT '创建用户',
@@ -111,7 +111,7 @@ CREATE TABLE `employee`  (
 DROP TABLE IF EXISTS `lost_found`;
 CREATE TABLE `lost_found`  (
   `id` bigint NOT NULL COMMENT '唯一标识符',
-  `description` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '描述信息',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '描述信息',
   `type` tinyint NOT NULL COMMENT '类型（1：找到，2：丢失）',
   `student_id` bigint NOT NULL COMMENT '上传的学生唯一标识符',
   `phone` char(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '联系电话',
@@ -143,8 +143,8 @@ CREATE TABLE `room`  (
   `update_user` bigint NULL DEFAULT NULL COMMENT '更新用户',
   `is_deleted` tinyint NOT NULL DEFAULT 0 COMMENT '逻辑删除标志位',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `room_fk_building`(`building_id` ASC) USING BTREE,
   UNIQUE INDEX `name`(`name` ASC) USING BTREE,
+  INDEX `room_fk_building`(`building_id` ASC) USING BTREE,
   CONSTRAINT `room_fk_building` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '寝室表' ROW_FORMAT = Dynamic;
 
@@ -189,7 +189,7 @@ CREATE TABLE `room_repair`  (
   `student_id` bigint NOT NULL COMMENT '申请的学生唯一标识符',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '损毁情况',
   `employee_dm_id` bigint NOT NULL COMMENT '宿舍管理员的唯一标识符',
-  `employee_mw_id` bigint NOT NULL COMMENT '安排的维修工的唯一标识符',
+  `employee_mw_id` bigint NULL DEFAULT NULL COMMENT '安排的维修工的唯一标识符',
   `status` tinyint NOT NULL COMMENT '状态（1：已申请，2：已安排，3：已完成）',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',

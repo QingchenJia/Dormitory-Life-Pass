@@ -144,7 +144,7 @@
 |   字段名    |   类型   | 长度 |             描述             | 可否为空 |     索引     |
 | :---------: | :------: | :--: | :--------------------------: | :------: | :----------: |
 |     id      |  BigInt  |      |          唯一标识符          |    N     |     主键     |
-| description | varchar  |  64  |           描述信息           |    N     |              |
+| description | varchar  | 255  |           描述信息           |    N     |              |
 |    type     | TinyInt  |      |   类型（1：找到，2：丢失）   |    N     |              |
 | student_id  |  BigInt  |      |     上传的学生唯一标识符     |    N     | 外键（学生） |
 |    phone    |   char   |  11  |           联系电话           |    N     |              |
@@ -179,7 +179,7 @@
 |     id      |  BigInt  |      |     唯一标识符     |    N     |       主键       |
 | check_in_id |  BigInt  |      | 签到活动唯一标识符 |    N     | 外键（签到活动） |
 | student_id  |  BigInt  |      |   学生唯一标识符   |    N     |   外键（学生）   |
-| description | varchar  |  64  |    签到详情描述    |    Y     |                  |
+| description | varchar  | 255  |    签到详情描述    |    Y     |                  |
 | create_time | datetime |      |      创建时间      |    N     |                  |
 | update_time | datetime |      |      更新时间      |    N     |                  |
 | create_user |  BigInt  |      |      创建用户      |    N     |                  |
