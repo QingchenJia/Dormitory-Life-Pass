@@ -1,6 +1,7 @@
 package dormitorylifepass;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import dormitorylifepass.dto.CheckInDto;
 import dormitorylifepass.dto.RoomChangeDto;
 import dormitorylifepass.dto.RoomDto;
 import dormitorylifepass.dto.RoomRepairDto;
@@ -9,10 +10,7 @@ import dormitorylifepass.entity.RoomChange;
 import dormitorylifepass.entity.RoomRepair;
 import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
-import dormitorylifepass.service.EmployeeService;
-import dormitorylifepass.service.RoomChangeService;
-import dormitorylifepass.service.RoomRepairService;
-import dormitorylifepass.service.RoomService;
+import dormitorylifepass.service.*;
 import dormitorylifepass.utils.SHA256Util;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,8 @@ class DormitoryLifePassApplicationTests {
     private RoomChangeService roomChangeService;
     @Autowired
     private RoomRepairService roomRepairService;
+    @Autowired
+    private CheckInService checkInService;
 
     @Test
     void contextLoads() {
@@ -92,5 +92,17 @@ class DormitoryLifePassApplicationTests {
     void testSelectRoomRepairList() {
         List<RoomRepairDto> roomRepairDtos = roomRepairService.selectList(1869243215647526914L, null);
         System.out.println(roomRepairDtos);
+    }
+
+    @Test
+    void testSelectCheckInPage() {
+        Page<CheckInDto> checkInDtoPage = checkInService.selectPage(new Page<>(1, 10));
+        checkInDtoPage.getRecords().forEach(System.out::println);
+    }
+
+    @Test
+    void testSelectCheckInList() {
+        List<CheckInDto> checkInDtos = checkInService.selectList(1868988253831430144L);
+        checkInDtos.forEach(System.out::println);
     }
 }
