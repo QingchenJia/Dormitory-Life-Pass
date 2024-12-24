@@ -11,4 +11,6 @@ public interface LostFoundService extends IService<LostFound> {
     List<LostFound> selectList(Long studentId);
 
     void solve(List<Long> ids);
+
+    void deleteById(Long id);
 }

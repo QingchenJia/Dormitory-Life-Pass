@@ -9,13 +9,19 @@ import dormitorylifepass.mapper.LostFoundMapper;
 import dormitorylifepass.service.LostFoundService;
 import dormitorylifepass.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LostFoundServiceImpl extends ServiceImpl<LostFoundMapper, LostFound> implements LostFoundService {
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private StudentService studentService;
 
@@ -50,13 +56,27 @@ public class LostFoundServiceImpl extends ServiceImpl<LostFoundMapper, LostFound
      */
     @Override
     public List<LostFound> selectList(Long studentId) {
+        // 构造Redis中的键值
+        String key = "lostFound:studentId:" + studentId;
+        // 检查Redis中是否存在该键
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            // 如果存在，则直接从Redis中获取并返回列表
+            return (List<LostFound>) redisTemplate.opsForValue().get(key);
+        }
+
         // 创建一个Lambda查询包装器，用于构建查询条件
         LambdaQueryWrapper<LostFound> queryWrapper = new LambdaQueryWrapper<>();
         // 设置查询条件，筛选出学生ID等于给定值的记录
         queryWrapper.eq(studentId != null, LostFound::getStudentId, studentId);
 
         // 执行查询并返回结果列表
-        return list(queryWrapper);
+        List<LostFound> lostFoundsDB = list(queryWrapper);
+
+        // 将查询结果缓存到Redis中，设置过期时间为15分钟
+        redisTemplate.opsForValue().set(key, lostFoundsDB, 15, TimeUnit.MINUTES);
+
+        // 返回查询结果
+        return lostFoundsDB;
     }
 
     /**
@@ -79,5 +99,29 @@ public class LostFoundServiceImpl extends ServiceImpl<LostFoundMapper, LostFound
 
         // 批量更新失物招领列表，以反映它们的状态变化
         updateBatchById(lostFounds);
+
+        Set<String> keys = redisTemplate.keys("lostFound:*");
+        redisTemplate.delete(Objects.requireNonNull(keys));
+    }
+
+    /**
+     * 根据ID删除失物招领信息
+     * 此方法首先从数据库中获取失物招领信息，然后从数据库中删除该信息，
+     * 并接着删除Redis缓存中与该失物招领信息相关的条目
+     *
+     * @param id 失物招领信息的ID，用于标识数据库和缓存中的具体条目
+     */
+    @Override
+    public void deleteById(Long id) {
+        // 从数据库中获取失物招领信息
+        LostFound lostFoundDB = getById(id);
+        // 获取失物招领信息关联的学生ID
+        Long studentId = lostFoundDB.getStudentId();
+        // 从数据库中删除失物招领信息
+        removeById(id);
+        // 从Redis缓存中删除与该失物招领信息相关的学生ID条目
+        redisTemplate.delete("lostFound:studentId:" + studentId);
+        // 从Redis缓存中删除与该失物招领信息相关的学生ID为空的条目
+        redisTemplate.delete("lostFound:studentId:null");
     }
 }

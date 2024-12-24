@@ -17,4 +17,8 @@ public interface RoomService extends IService<Room> {
     List<RoomDto> searchInfo(Long buildingId);
 
     void updateStatus();
+
+    Room queryOne(Long id);
+
+    void updateByRoomId(Room room);
 }

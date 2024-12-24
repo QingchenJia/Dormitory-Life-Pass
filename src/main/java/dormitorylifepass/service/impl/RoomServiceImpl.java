@@ -16,13 +16,19 @@ import dormitorylifepass.service.RoomService;
 import dormitorylifepass.service.StudentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements RoomService {
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private BuildingService buildingService;
     @Autowired
@@ -159,5 +165,50 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
 
         // 批量更新房间状态
         updateBatchById(roomsDB);
+
+        // 清除Redis中与房间相关的缓存
+        Set<String> keys = redisTemplate.keys("room:*");
+        redisTemplate.delete(Objects.requireNonNull(keys));
+    }
+
+    /**
+     * 根据ID查询房间信息
+     * 首先尝试从Redis缓存中获取数据，如果缓存不存在，则从数据库中查询
+     * 并将查询结果缓存到Redis中，以提高下次查询的效率
+     *
+     * @param id 房间的唯一标识符
+     * @return 返回房间对象，如果未找到则返回null
+     */
+    @Override
+    public Room queryOne(Long id) {
+        // 构造Redis缓存的键
+        String key = "room:roomId:" + id;
+        // 检查Redis缓存中是否存在该房间的信息
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            // 如果缓存存在，则直接从缓存中获取并返回房间对象
+            return (Room) redisTemplate.opsForValue().get(key);
+        }
+
+        // 如果缓存不存在，则从数据库中查询房间信息
+        Room roomDB = getById(id);
+        // 将查询到的房间信息存入Redis缓存，并设置缓存过期时间为15分钟
+        redisTemplate.opsForValue().set(key, roomDB, 15, TimeUnit.MINUTES);
+
+        // 返回从数据库中查询到的房间信息
+        return roomDB;
+    }
+
+    /**
+     * 根据房间ID更新房间信息，并同步更新缓存
+     * 当房间信息被更新时，需要确保缓存中的数据与数据库中的数据保持一致
+     * 此方法首先调用updateById方法来更新数据库中的房间信息，然后删除缓存中的相应房间信息
+     * 这样可以确保下一次查询该房间信息时，能够从数据库中获取到最新的数据并重新缓存
+     *
+     * @param room 要更新的房间对象，包含要更新的房间信息
+     */
+    @Override
+    public void updateByRoomId(Room room) {
+        updateById(room);
+        redisTemplate.delete("room:roomId:" + room.getId());
     }
 }

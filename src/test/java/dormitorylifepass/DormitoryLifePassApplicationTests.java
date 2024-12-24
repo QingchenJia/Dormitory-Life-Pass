@@ -6,6 +6,7 @@ import dormitorylifepass.dto.RoomChangeDto;
 import dormitorylifepass.dto.RoomDto;
 import dormitorylifepass.dto.RoomRepairDto;
 import dormitorylifepass.entity.Employee;
+import dormitorylifepass.entity.Room;
 import dormitorylifepass.entity.RoomChange;
 import dormitorylifepass.entity.RoomRepair;
 import dormitorylifepass.enums.EmployeeStatus;
@@ -104,5 +105,11 @@ class DormitoryLifePassApplicationTests {
     void testSelectCheckInList() {
         List<CheckInDto> checkInDtos = checkInService.selectList(1868988253831430144L);
         checkInDtos.forEach(System.out::println);
+    }
+
+    @Test
+    void testRedisQueryRoomById() {
+        Room room = roomService.queryOne(1869290245757861888L);
+        System.out.println(room);
     }
 }

@@ -68,7 +68,7 @@ public class LostFoundController {
      * @return 返回一个封装了失物招领列表的响应对象
      */
     @GetMapping("/list")
-    public R<List<LostFound>> list(Long studentId) {
+    public R<List<LostFound>> list(@RequestParam(required = false) Long studentId) {
         // 调用服务层方法，获取数据库中的失物招领信息列表
         List<LostFound> lostFoundsDB = lostFoundService.selectList(studentId);
         // 返回成功响应，包含失物招领列表
@@ -115,7 +115,7 @@ public class LostFoundController {
     @DeleteMapping("/{id}")
     public R<String> delete(@PathVariable Long id) {
         // 调用服务层方法，根据提供的ID删除失物招领信息
-        lostFoundService.removeById(id);
+        lostFoundService.deleteById(id);
         // 返回删除成功的响应对象
         return R.success("删除成功");
     }

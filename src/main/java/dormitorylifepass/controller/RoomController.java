@@ -70,9 +70,9 @@ public class RoomController {
     @GetMapping("/{id}")
     public R<Room> queryOne(@PathVariable Long id) {
         // 调用roomService的getById方法根据房间ID查询房间信息
-        Room room = roomService.getById(id);
+        Room roomDB = roomService.queryOne(id);
         // 返回包含查询结果的响应对象
-        return R.success(room);
+        return R.success(roomDB);
     }
 
     /**
@@ -87,7 +87,7 @@ public class RoomController {
         // 记录更新房间的日志信息
         log.info("修改房间信息：{}", room);
         // 调用服务层方法，根据房间对象的ID更新房间信息
-        roomService.updateById(room);
+        roomService.updateByRoomId(room);
         // 返回成功响应，包含成功消息
         return R.success("修改成功");
     }
