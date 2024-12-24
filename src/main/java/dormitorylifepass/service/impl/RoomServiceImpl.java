@@ -211,4 +211,17 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
         updateById(room);
         redisTemplate.delete("room:roomId:" + room.getId());
     }
+
+    /**
+     * 根据ID删除实体，并从Redis中删除对应的缓存
+     *
+     * @param id 实体的ID，用于数据库和Redis缓存中的定位
+     */
+    @Override
+    public void deleteById(Long id) {
+        // 删除数据库中的实体
+        removeById(id);
+        // 删除Redis中与该实体ID对应的缓存
+        redisTemplate.delete("room:roomId:" + id);
+    }
 }

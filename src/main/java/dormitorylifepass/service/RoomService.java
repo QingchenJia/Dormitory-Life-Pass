@@ -21,4 +21,6 @@ public interface RoomService extends IService<Room> {
     Room queryOne(Long id);
 
     void updateByRoomId(Room room);
+
+    void deleteById(Long id);
 }

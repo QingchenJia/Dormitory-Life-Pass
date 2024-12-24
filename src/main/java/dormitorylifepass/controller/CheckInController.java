@@ -68,4 +68,19 @@ public class CheckInController {
         // 返回成功响应，包含签到信息列表
         return R.success(checkInDtos);
     }
+
+    /**
+     * 处理删除签到信息的请求
+     * 通过签到ID删除对应的签到记录
+     *
+     * @param id 签到的唯一标识符，用于指定要删除的签到记录
+     * @return 返回一个响应对象，包含删除操作的结果信息
+     */
+    @DeleteMapping("/{id}")
+    public R<String> delete(@PathVariable Long id) {
+        // 调用服务层方法，根据签到ID删除签到信息
+        checkInService.removeById(id);
+        // 返回成功响应，表示删除成功
+        return R.success("删除成功");
+    }
 }

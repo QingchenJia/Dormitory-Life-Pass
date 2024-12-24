@@ -150,4 +150,18 @@ public class EmployeeController {
         // 将查询结果封装到响应对象中并返回
         return R.success(employeesDB);
     }
+
+    /**
+     * 处理HTTP DELETE请求，通过员工ID删除员工信息
+     *
+     * @param id 员工ID，用于标识要删除的员工
+     * @return 返回一个响应对象，包含删除操作的结果信息
+     */
+    @DeleteMapping("/{id}")
+    public R<String> delete(@PathVariable Long id) {
+        // 调用服务层方法，根据员工ID删除员工信息
+        employeeService.removeById(id);
+        // 返回成功响应，表示员工信息删除成功
+        return R.success("员工信息删除成功");
+    }
 }

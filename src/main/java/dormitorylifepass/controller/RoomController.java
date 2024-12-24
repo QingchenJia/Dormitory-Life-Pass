@@ -119,4 +119,20 @@ public class RoomController {
         // 返回成功响应，包含房间信息列表
         return R.success(roomDtos);
     }
+
+    /**
+     * 处理删除房间信息的HTTP请求
+     * 该方法使用DeleteMapping注解来指定HTTP DELETE请求的处理方法
+     * 路径变量{id}用于指定要删除的房间的ID
+     *
+     * @param id 要删除的房间的ID，通过路径变量传递
+     * @return 返回一个响应对象，包含删除成功的消息
+     */
+    @DeleteMapping("/{id}")
+    public R<String> delete(@PathVariable Long id) {
+        // 调用服务层方法，根据房间ID删除房间信息
+        roomService.deleteById(id);
+        // 返回成功响应，包含成功消息
+        return R.success("删除成功");
+    }
 }

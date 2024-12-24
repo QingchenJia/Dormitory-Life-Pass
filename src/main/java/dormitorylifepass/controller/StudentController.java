@@ -124,4 +124,21 @@ public class StudentController {
         studentService.updateById(student);
         return R.success("修改成功");
     }
+
+    /**
+     * 处理学生信息删除请求的控制器方法
+     * 使用HTTP DELETE方法删除指定ID的学生信息
+     *
+     * @param id 要删除的学生的ID，通过URL路径变量获取
+     * @return 返回一个表示删除成功的消息响应
+     */
+    @DeleteMapping("/{id}")
+    public R<String> delete(@PathVariable Long id) {
+        // 记录删除学生的日志信息
+        log.info("删除学生信息：{}", id);
+        // 调用学生服务层的按ID删除方法
+        studentService.removeById(id);
+        // 返回删除成功的响应消息
+        return R.success("删除成功");
+    }
 }

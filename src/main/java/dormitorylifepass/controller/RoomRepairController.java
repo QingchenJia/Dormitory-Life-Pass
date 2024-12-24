@@ -97,4 +97,19 @@ public class RoomRepairController {
         roomRepairService.finish(roomRepair);
         return R.success("完成");
     }
+
+    /**
+     * 处理删除请求的控制器方法
+     * 该方法用于删除具有特定ID的房间维修记录
+     *
+     * @param id 要删除的房间维修记录的ID
+     * @return 返回一个表示删除成功的消息响应
+     */
+    @DeleteMapping("/{id}")
+    public R<String> delete(@PathVariable Long id) {
+        // 调用服务层方法，根据传入的ID删除房间维修记录
+        roomRepairService.removeById(id);
+        // 返回删除成功的消息响应
+        return R.success("删除成功");
+    }
 }
