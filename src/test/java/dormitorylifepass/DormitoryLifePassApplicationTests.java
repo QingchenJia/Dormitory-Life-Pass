@@ -1,5 +1,6 @@
 package dormitorylifepass;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import dormitorylifepass.dto.CheckInDto;
 import dormitorylifepass.dto.RoomChangeDto;
@@ -12,7 +13,6 @@ import dormitorylifepass.entity.RoomRepair;
 import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.service.*;
-import dormitorylifepass.utils.SHA256Util;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,9 +44,7 @@ class DormitoryLifePassApplicationTests {
 
     @Test
     void testSHA256Encrypt() {
-        String encrypt = SHA256Util.encrypt("123456");
-        System.out.println(encrypt.length());
-        System.out.println(encrypt);
+        System.out.println(DigestUtil.sha256Hex("123456"));
     }
 
     @Test

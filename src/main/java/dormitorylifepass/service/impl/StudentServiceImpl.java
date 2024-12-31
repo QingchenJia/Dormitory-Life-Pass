@@ -1,13 +1,13 @@
 package dormitorylifepass.service.impl;
 
 import ch.qos.logback.core.util.StringUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import dormitorylifepass.entity.Student;
 import dormitorylifepass.mapper.StudentMapper;
 import dormitorylifepass.service.StudentService;
-import dormitorylifepass.utils.SHA256Util;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,7 +36,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                 .eq(StringUtil.notNullNorEmpty(student.getUsername()), Student::getUsername, student.getUsername())
                 // 按密码进行查询，这里直接使用SHA-256加密给定的密码，然后进行比较
                 // 由于密码在存储时应该是加密的，因此在登录时也需要对输入的密码进行同样的加密处理
-                .eq(Student::getPassword, SHA256Util.encrypt(student.getPassword()));
+                .eq(Student::getPassword, DigestUtil.sha256Hex(student.getPassword()));
 
         // 使用上述查询条件获取匹配的学生对象
         // 如果有唯一匹配的学生对象，则返回该对象；否则返回null
@@ -66,7 +66,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             throw new RuntimeException("学号或账号已存在");
 
         // 为学生设置默认密码并加密
-        student.setPassword(SHA256Util.encrypt("123456"));
+        student.setPassword(DigestUtil.sha256Hex("123456"));
         // 保存学生信息到数据库
         save(student);
     }

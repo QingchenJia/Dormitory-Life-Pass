@@ -1,6 +1,7 @@
 package dormitorylifepass.service.impl;
 
 import ch.qos.logback.core.util.StringUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,7 +11,6 @@ import dormitorylifepass.enums.EmployeeStatus;
 import dormitorylifepass.enums.EmployeeType;
 import dormitorylifepass.mapper.EmployeeMapper;
 import dormitorylifepass.service.EmployeeService;
-import dormitorylifepass.utils.SHA256Util;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         // 注意：密码需要使用SHA256加密后进行比较，以确保安全性
         queryWrapper.eq(StringUtil.notNullNorEmpty(employee.getUsername()), Employee::getUsername, employee.getUsername())
                 .eq(StringUtil.notNullNorEmpty(employee.getJobNum()), Employee::getJobNum, employee.getJobNum())
-                .eq(Employee::getPassword, SHA256Util.encrypt(employee.getPassword()));
+                .eq(Employee::getPassword, DigestUtil.sha256Hex(employee.getPassword()));
 
         // 执行查询，返回满足条件的员工对象
         // 如果没有满足条件的记录，getOne方法将返回null
@@ -59,7 +59,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             throw new CustomException("员工工号或账号已存在");
 
         // 加密默认密码并设置到员工实体
-        employee.setPassword(SHA256Util.encrypt("123456"));
+        employee.setPassword(DigestUtil.sha256Hex("123456"));
         // 保存员工实体到数据库
         save(employee);
     }
